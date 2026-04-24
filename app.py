@@ -40,65 +40,83 @@ input {{
     border: 2px solid {GREEN} !important;
     border-radius: 10px !important;
 }}
-
 </style>
 """, unsafe_allow_html=True)
 
 if "cart" not in st.session_state:
     st.session_state.cart = []
 
+# HEADER
 st.markdown("<h1 class='center'>Cagette</h1>", unsafe_allow_html=True)
 st.markdown("<p class='center'>Achetez local, simplement.</p>", unsafe_allow_html=True)
 
-search = st.text_input("Rechercher un produit ou un commerçant")
+# 🔥 ONGLETS
+tab1, tab2, tab3 = st.tabs(["Accueil", "À propos de nous", "Nos commerçants"])
 
-products = [
-    {"name": "Tomates bio", "price": 3.5},
-    {"name": "Carottes fraîches", "price": 2.0},
-    {"name": "Panier de légumes", "price": 10.0},
-    {"name": "Salade verte", "price": 1.8},
-]
+# ---------------- TAB 1 : ACCUEIL ----------------
+with tab1:
+    search = st.text_input("Rechercher un produit ou un commerçant")
 
-merchants = [
-    {"name": "Ferme du Soleil", "type": "Légumes", "location": "Marseille 8e"},
-    {"name": "Le Panier Vert", "type": "Épicerie", "location": "Vieux-Port"},
-    {"name": "Bio Provence", "type": "Fruits & Légumes", "location": "La Joliette"},
-]
+    products = [
+        {"name": "Tomates bio", "price": 3.5},
+        {"name": "Carottes fraîches", "price": 2.0},
+        {"name": "Panier de légumes", "price": 10.0},
+        {"name": "Salade verte", "price": 1.8},
+    ]
 
-st.markdown("## Résultats")
+    st.markdown("## Résultats")
 
-for p in products:
-    if search.lower() in p["name"].lower() or search == "":
-        st.markdown(f"""
-        <div class="card">
-            <h3>{p['name']}</h3>
-            <p>{p['price']} €</p>
-            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e" width="100%">
-        </div>
-        """, unsafe_allow_html=True)
+    for p in products:
+        if search.lower() in p["name"].lower() or search == "":
+            st.markdown(f"""
+            <div class="card">
+                <h3>{p['name']}</h3>
+                <p>{p['price']} €</p>
+                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e" width="100%">
+            </div>
+            """, unsafe_allow_html=True)
 
-        if st.button(f"Ajouter {p['name']}"):
-            st.session_state.cart.append(p)
+            if st.button(f"Ajouter {p['name']}"):
+                st.session_state.cart.append(p)
 
-st.markdown("## Nos commerçants")
+    st.markdown("## Panier")
 
-cols = st.columns(3)
-for i, m in enumerate(merchants):
-    with cols[i % 3]:
-        st.markdown(f"""
-        <div class="card">
-            <h3>{m['name']}</h3>
-            <p>{m['type']}</p>
-            <p>{m['location']}</p>
-            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e" width="100%">
-        </div>
-        """, unsafe_allow_html=True)
+    total = 0
+    for item in st.session_state.cart:
+        st.write(f"- {item['name']} : {item['price']} €")
+        total += item["price"]
 
-st.markdown("## Panier")
+    st.markdown(f"### Total : {total} €")
 
-total = 0
-for item in st.session_state.cart:
-    st.write(f"- {item['name']} : {item['price']} €")
-    total += item["price"]
+# ---------------- TAB 2 : À PROPOS ----------------
+with tab2:
+    st.markdown("## À propos de nous")
+    st.write("""
+    Cagette est une plateforme locale basée à Marseille.
+    Notre mission est simple : vous permettre d’acheter des produits frais directement auprès de producteurs locaux.
+    
+    Nous croyons en une consommation plus responsable, plus proche et plus humaine.
+    """)
 
-st.markdown(f"### Total : {total} €")
+# ---------------- TAB 3 : COMMERCANTS ----------------
+with tab3:
+    st.markdown("## À propos de nos commerçants")
+
+    merchants = [
+        {"name": "Ferme du Soleil", "type": "Légumes", "location": "Marseille 8e"},
+        {"name": "Le Panier Vert", "type": "Épicerie", "location": "Vieux-Port"},
+        {"name": "Bio Provence", "type": "Fruits & Légumes", "location": "La Joliette"},
+    ]
+
+    cols = st.columns(3)
+
+    for i, m in enumerate(merchants):
+        with cols[i % 3]:
+            st.markdown(f"""
+            <div class="card">
+                <h3>{m['name']}</h3>
+                <p>{m['type']}</p>
+                <p>{m['location']}</p>
+                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e" width="100%">
+            </div>
+            """, unsafe_allow_html=True)
