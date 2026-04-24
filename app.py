@@ -32,13 +32,40 @@ h1, h2, h3, p, label {{
 .stButton > button {{
     background-color: {GREEN};
     color: {BEIGE};
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
+    padding: 10px 16px;
+    font-weight: bold;
+    transition: 0.2s;
+}}
+
+.stButton > button:hover {{
+    opacity: 0.85;
+    transform: scale(1.02);
 }}
 
 input {{
     border: 2px solid {GREEN} !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
+}}
+
+/* TAB STYLE */
+.stTabs [data-baseweb="tab-list"] {{
+    gap: 10px;
+}}
+
+.stTabs [data-baseweb="tab"] {{
+    background-color: white;
+    border-radius: 12px;
+    padding: 10px 16px;
+    color: {GREEN};
+    font-weight: bold;
+    border: 1px solid {GREEN};
+}}
+
+.stTabs [aria-selected="true"] {{
+    background-color: {GREEN} !important;
+    color: {BEIGE} !important;
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -46,14 +73,12 @@ input {{
 if "cart" not in st.session_state:
     st.session_state.cart = []
 
-# HEADER
 st.markdown("<h1 class='center'>Cagette</h1>", unsafe_allow_html=True)
 st.markdown("<p class='center'>Achetez local, simplement.</p>", unsafe_allow_html=True)
 
-# 🔥 ONGLETS
 tab1, tab2, tab3 = st.tabs(["Accueil", "À propos de nous", "Nos commerçants"])
 
-# ---------------- TAB 1 : ACCUEIL ----------------
+# ---------------- ACCUEIL ----------------
 with tab1:
     search = st.text_input("Rechercher un produit ou un commerçant")
 
@@ -62,17 +87,28 @@ with tab1:
         {"name": "Carottes fraîches", "price": 2.0},
         {"name": "Panier de légumes", "price": 10.0},
         {"name": "Salade verte", "price": 1.8},
+        {"name": "Courgettes locales", "price": 4.5},
     ]
+
+    def image_for_price(price):
+        if price <= 2:
+            return "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce"
+        elif price <= 4:
+            return "https://images.unsplash.com/photo-1582515073490-39981397c445"
+        else:
+            return "https://images.unsplash.com/photo-1518843875459-f738682238a6"
 
     st.markdown("## Résultats")
 
     for p in products:
         if search.lower() in p["name"].lower() or search == "":
+            img = image_for_price(p["price"])
+
             st.markdown(f"""
             <div class="card">
                 <h3>{p['name']}</h3>
                 <p>{p['price']} €</p>
-                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e" width="100%">
+                <img src="{img}" width="100%">
             </div>
             """, unsafe_allow_html=True)
 
@@ -88,24 +124,35 @@ with tab1:
 
     st.markdown(f"### Total : {total} €")
 
-# ---------------- TAB 2 : À PROPOS ----------------
+# ---------------- À PROPOS ----------------
 with tab2:
     st.markdown("## À propos de nous")
+
     st.write("""
-    Cagette est une plateforme locale basée à Marseille.
-    Notre mission est simple : vous permettre d’acheter des produits frais directement auprès de producteurs locaux.
-    
-    Nous croyons en une consommation plus responsable, plus proche et plus humaine.
+    Cagette est une nouvelle application née à Marseille avec une ambition simple : 
+    rapprocher les habitants des producteurs locaux et rendre l’alimentation plus saine, plus transparente et plus accessible.
+
+    Nous croyons qu’il est possible de consommer autrement, sans intermédiaires inutiles, en soutenant directement les agriculteurs, 
+    maraîchers, épiceries locales et petits commerces de quartier.
+
+    Notre mission est de créer un pont entre la ville et la campagne autour de Marseille, en mettant en avant des produits frais, 
+    de saison et issus d’un savoir-faire local.
+
+    Cagette, c’est aussi une communauté engagée qui veut redonner du sens à ce que nous mangeons chaque jour, 
+    tout en soutenant l’économie locale et en réduisant l’impact environnemental.
     """)
 
-# ---------------- TAB 3 : COMMERCANTS ----------------
+# ---------------- COMMERCANTS ----------------
 with tab3:
-    st.markdown("## À propos de nos commerçants")
+    st.markdown("## Nos commerçants")
 
     merchants = [
-        {"name": "Ferme du Soleil", "type": "Légumes", "location": "Marseille 8e"},
-        {"name": "Le Panier Vert", "type": "Épicerie", "location": "Vieux-Port"},
-        {"name": "Bio Provence", "type": "Fruits & Légumes", "location": "La Joliette"},
+        {"name": "Ferme du Soleil", "type": "Légumes", "location": "Marseille 8e",
+         "img": "https://images.unsplash.com/photo-1500595046743-cd271d694d30"},
+        {"name": "Le Panier Vert", "type": "Épicerie", "location": "Vieux-Port",
+         "img": "https://images.unsplash.com/photo-1542838132-92c53300491e"},
+        {"name": "Bio Provence", "type": "Fruits & Légumes", "location": "La Joliette",
+         "img": "https://images.unsplash.com/photo-1557844352-761f2565b576"},
     ]
 
     cols = st.columns(3)
@@ -117,6 +164,6 @@ with tab3:
                 <h3>{m['name']}</h3>
                 <p>{m['type']}</p>
                 <p>{m['location']}</p>
-                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e" width="100%">
+                <img src="{m['img']}" width="100%">
             </div>
             """, unsafe_allow_html=True)
