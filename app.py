@@ -23,10 +23,19 @@ h1, h2, h3, p, label {{
 
 .card {{
     background-color: white;
-    padding: 15px;
+    padding: 12px;
     border-radius: 15px;
     box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
     margin-bottom: 10px;
+    text-align: center;
+}}
+
+.card img {{
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 8px;
 }}
 
 .stButton > button {{
@@ -36,28 +45,16 @@ h1, h2, h3, p, label {{
     border: none;
     padding: 10px 16px;
     font-weight: bold;
-    transition: 0.2s;
 }}
 
 .stButton > button:hover {{
     opacity: 0.85;
-    transform: scale(1.02);
-}}
-
-input {{
-    border: 2px solid {GREEN} !important;
-    border-radius: 12px !important;
-}}
-
-/* TAB STYLE */
-.stTabs [data-baseweb="tab-list"] {{
-    gap: 10px;
 }}
 
 .stTabs [data-baseweb="tab"] {{
     background-color: white;
     border-radius: 12px;
-    padding: 10px 16px;
+    padding: 10px 14px;
     color: {GREEN};
     font-weight: bold;
     border: 1px solid {GREEN};
@@ -78,37 +75,47 @@ st.markdown("<p class='center'>Achetez local, simplement.</p>", unsafe_allow_htm
 
 tab1, tab2, tab3 = st.tabs(["Accueil", "À propos de nous", "Nos commerçants"])
 
-# ---------------- ACCUEIL ----------------
+# ---------------- PRODUITS ----------------
 with tab1:
-    search = st.text_input("Rechercher un produit ou un commerçant")
+    search = st.text_input("Rechercher un produit")
 
     products = [
-        {"name": "Tomates bio", "price": 3.5},
-        {"name": "Carottes fraîches", "price": 2.0},
-        {"name": "Panier de légumes", "price": 10.0},
-        {"name": "Salade verte", "price": 1.8},
-        {"name": "Courgettes locales", "price": 4.5},
+        {
+            "name": "Tomates bio",
+            "price": 3.5,
+            "img": "https://images.unsplash.com/photo-1561136594-7f68413baa99"
+        },
+        {
+            "name": "Carottes fraîches",
+            "price": 2.0,
+            "img": "https://images.unsplash.com/photo-1447175008436-054170c2e979"
+        },
+        {
+            "name": "Courgettes locales",
+            "price": 4.5,
+            "img": "https://images.unsplash.com/photo-1582515073490-39981397c445"
+        },
+        {
+            "name": "Salade verte",
+            "price": 1.8,
+            "img": "https://images.unsplash.com/photo-1557844352-761f2565b576"
+        },
+        {
+            "name": "Pommes de terre",
+            "price": 2.8,
+            "img": "https://images.unsplash.com/photo-1518977676601-b53f82aba655"
+        }
     ]
-
-    def image_for_price(price):
-        if price <= 2:
-            return "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce"
-        elif price <= 4:
-            return "https://images.unsplash.com/photo-1582515073490-39981397c445"
-        else:
-            return "https://images.unsplash.com/photo-1518843875459-f738682238a6"
 
     st.markdown("## Résultats")
 
     for p in products:
         if search.lower() in p["name"].lower() or search == "":
-            img = image_for_price(p["price"])
-
             st.markdown(f"""
             <div class="card">
                 <h3>{p['name']}</h3>
                 <p>{p['price']} €</p>
-                <img src="{img}" width="100%">
+                <img src="{p['img']}">
             </div>
             """, unsafe_allow_html=True)
 
@@ -124,35 +131,45 @@ with tab1:
 
     st.markdown(f"### Total : {total} €")
 
-# ---------------- À PROPOS ----------------
+# ---------------- A PROPOS ----------------
 with tab2:
     st.markdown("## À propos de nous")
 
     st.write("""
-    Cagette est une nouvelle application née à Marseille avec une ambition simple : 
-    rapprocher les habitants des producteurs locaux et rendre l’alimentation plus saine, plus transparente et plus accessible.
+Cagette est une nouvelle application basée à Marseille.
 
-    Nous croyons qu’il est possible de consommer autrement, sans intermédiaires inutiles, en soutenant directement les agriculteurs, 
-    maraîchers, épiceries locales et petits commerces de quartier.
+Notre mission est simple : reconnecter les habitants avec les producteurs locaux et rendre l’accès aux produits frais plus simple, rapide et transparent.
 
-    Notre mission est de créer un pont entre la ville et la campagne autour de Marseille, en mettant en avant des produits frais, 
-    de saison et issus d’un savoir-faire local.
+Nous voulons aider les Marseillais à mieux consommer en favorisant les circuits courts, les produits de saison et les petits commerces de quartier.
 
-    Cagette, c’est aussi une communauté engagée qui veut redonner du sens à ce que nous mangeons chaque jour, 
-    tout en soutenant l’économie locale et en réduisant l’impact environnemental.
-    """)
+Grâce à Cagette, vous pouvez découvrir des producteurs proches de chez vous, acheter des produits frais, et soutenir directement l’économie locale.
+
+C’est une nouvelle manière de consommer : plus humaine, plus responsable et plus locale.
+""")
 
 # ---------------- COMMERCANTS ----------------
 with tab3:
     st.markdown("## Nos commerçants")
 
     merchants = [
-        {"name": "Ferme du Soleil", "type": "Légumes", "location": "Marseille 8e",
-         "img": "https://images.unsplash.com/photo-1500595046743-cd271d694d30"},
-        {"name": "Le Panier Vert", "type": "Épicerie", "location": "Vieux-Port",
-         "img": "https://images.unsplash.com/photo-1542838132-92c53300491e"},
-        {"name": "Bio Provence", "type": "Fruits & Légumes", "location": "La Joliette",
-         "img": "https://images.unsplash.com/photo-1557844352-761f2565b576"},
+        {
+            "name": "Ferme du Soleil",
+            "type": "Légumes",
+            "location": "Marseille 8e",
+            "img": "https://images.unsplash.com/photo-1500595046743-cd271d694d30"
+        },
+        {
+            "name": "Le Panier Vert",
+            "type": "Épicerie",
+            "location": "Vieux-Port",
+            "img": "https://images.unsplash.com/photo-1542838132-92c53300491e"
+        },
+        {
+            "name": "Bio Provence",
+            "type": "Fruits & Légumes",
+            "location": "La Joliette",
+            "img": "https://images.unsplash.com/photo-1557844352-761f2565b576"
+        },
     ]
 
     cols = st.columns(3)
@@ -164,6 +181,6 @@ with tab3:
                 <h3>{m['name']}</h3>
                 <p>{m['type']}</p>
                 <p>{m['location']}</p>
-                <img src="{m['img']}" width="100%">
+                <img src="{m['img']}">
             </div>
             """, unsafe_allow_html=True)
